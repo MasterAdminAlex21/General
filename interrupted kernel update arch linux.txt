@@ -1,0 +1,96 @@
+error cuando se interrumpe la actualizacion de kernel en arch linux
+
+(partes tomadas de https://bbs.archlinux.org/viewtopic.php?id=237066)
+
+siguiendo los pasos de Eispala, y usando la live system de Arch Linux, ejecutamos los siguientes comandos:
+
+$ mount /dev/sdXX /mnt
+$ mount /dev/sdXX /mnt/boot/efi
+$ swapon /dev/sdXX
+
+si existe la particion de windows, entonces se  borran todos los archivos relacionados con linux (se deja la carpeta de EFI con la carpeta de Windows o Microsoft solamente), en caso de que sea solo linux, ejecutar
+
+$ rm -rf /mnt/boot
+
+ingresamos a la configuracion del sistema con
+
+$ arch-chroot /mnt
+
+y ejecutamos
+
+$ bootctl install
+
+$ pacman -S linux
+
+$ pacman -S intel-ucode
+
+luego generamos el ramdisk inicial
+ 
+$ mkinitcpio -p linux
+
+y reinstalamos el grub
+
+$ grub-install /dev/sdXX
+
+y generamos la configuracion del grub
+
+$ grub-mkconfig -o /boot/grub/grub.cfg
+
+luego reiniciamos
+
+$ reboot
+
+y Arch deberia de volver a funcionar sin modificaciones sobre las particiones
+
+**nota, las particiones /dev/sdXX, la XX indica la letra y numero de particion, en /dev/sdXX /mnt XX es la letra y numero de particion del root (/), /dev/sdXX /mnt/boot/efi la particion de boot (generalmente 1), y en swapon /dev/sdXX la particion de la swap
+
+
+--------------------------------------------------------------
+
+english ver.
+
+error in kernel update interrupted on Arch linux
+
+(steps based on https://bbs.archlinux.org/viewtopic.php?id=237066)
+
+following the Eispala steps, and using the Arch Linux live system, execute the commands:
+
+$ mount /dev/sdXX /mnt
+$ mount /dev/sdXX /mnt/boot/efi
+$ swapon /dev/sdXX
+
+if the Windows partition exist, then delete the files related with linux (don't delete the Windows or Microsoft folder in the EFI folder). in case Linux is the only system installed, execute:
+
+$ rm -rf /mnt/boot
+
+then enter in the system configuration using 
+
+$ arch-chroot /mnt
+
+and then
+
+$ bootctl install
+
+$ pacman -S linux
+
+$ pacman -S intel-ucode
+
+then generate the initial ramdisk
+
+$ mkinitcpio -p linux
+
+reinstall the grub
+
+$ grub-install /dev/sdXX
+
+generate the grub configuration
+
+$ grub-mkconfig -o /boot/grub/grub.cfg
+
+and reboot the pc
+
+$ reboot
+
+after reboot, Arch linux should start again withouth any modifications in the partitions / and home
+
+**note: in the /dev/sdXX partitions, the XX mean the partition letter and number, for example, in /dev/sdXX /mnt XX represents the root (/) partition letter and number, /dev/sdXX /mnt/boot/efi the boot partition (usually 1), and swapon /dev/sdXX the swap partition
