@@ -1,0 +1,164 @@
+
+
+
+primero: realizar las particiones 
+ /dev/sda2 > swap
+ /dev/sda3 > root
+ /dev/sda4 > home
+
+formatear los discos
+ mkfs.ext4 /dev/sda3 >root
+ mkfs.ext4 /dev/sda4 >home
+ mkswap /dev/sda2
+ 
+activar la swap 
+ swapon /dev/sda2
+
+crear directorios y montar particiones
+ mount /dev/sda3 /mnt 
+ mkdir /mnt/home
+ mount /dev/sda4 /mnt/home
+ mkdir /mnt/boot
+ mkdir /mnt/boot/efi
+ mount /dev/sda1 /mnt/boot/efi
+
+conectar a internet
+ wifi-menu
+y seleccionar el wifi
+
+ejecutar ping para saber la conexion
+ ping -c 3 www.google.com
+
+instalar paquetes basicos en /mnt
+ pacstrap /mnt base base-devel 
+
+ pacstrap /mnt grub efibootmgr os-prober 
+
+en caso de que sea una laptop, descargar
+ pacstrap /mnt xf86-input-synaptics
+
+descargar driver para interfaz wifi
+ pacstrap /mnt netctl wpa_supplicant dialog
+
+descargar network manager
+ pacstrap /mnt networkmanager
+
+escribir la tabla de particiones
+ genfstab -pU /mnt >> /mnt/etc/fstab
+
+se ingresa como root para configurar el sistema
+ arch-chroot /mnt
+
+establece el nombre del equipo
+ echo nombredelequipo > /etc/hostname
+
+se determina la zona horaria
+ ln -sf /usr/share/zoneinfo/America/Mexico_City
+
+configuramos el idioma
+ nano /etc/locale.gen
+
+y se descomenta las lineas (preferentemente) 
+ #es_MX.ES_UTF8 UTF-8
+ #es_MX ISO-8859-1
+
+establecer lenguaje
+ echo LANG=es_ES.UTF-8 >> /etc/locale.conf
+
+generar localizacion
+ locale-gen
+
+establecer el teclado
+ echo KEYMAP=la-latin1 >> /etc/vconsole.conf
+
+generar ramdisk inicial
+ mkinitcpio -p linux
+
+instalar el grub
+ grub-install /dev/sda1
+
+generar la configuracion del grub
+ grub-mkconfig -o /boot/grub/grub.cfg
+
+se establece pasword para root (opcional)
+ passwd
+
+salimos del chroot
+ exit
+
+desmontamos particiones
+ umount -R /mnt
+
+se reinicia
+ reboot
+
+nos conectamos a internet
+ wifi-menu
+
+se agrega el o los usuarios
+ useradd -m -g users -G wheel,lp,audio,storage,scanner,optical,sys,games,power,video -s /bin/bash nombreusuario
+
+establecemos contraseña del usuario
+ passwd nombreusuario
+
+modificamos el archivo de sudoers
+ nano /etc/sudoers
+
+y se descomenta la linea 
+ # %wheel ALL=(ALL) ALL
+
+se añade el repositorio aur
+ nano /etc/pacman.conf
+
+ [archlinuxfr]
+ SigLevel=Never
+ Server=http://repo.archlinux.fr/$arch
+
+descomentar el repo multilib para el uso del wine
+ [multilib]
+ Include= /etc/pacman.d/mirrorlist
+
+actualizar el sistema
+ pacman -Syu
+
+instalacion entorno grafico basico
+probar el grafico:
+ sudo pacman -S xorg xorg-server xorg-xinit xorg-utils
+
+instalar soporte 3d
+ sudo pacman -S mesa mesa-demos
+
+drivers de video(en mi caso intel)
+ sudo pacman -S xf86-video-intel
+
+descargar paquetes para servidor x
+ sudo pacman -S xorg-twm xorg-xclock xterm
+
+si todo se instalo correcto, ejecutar 
+ startx
+
+y se vera un entorno grafico basico, para terminarlo y regresar a la terminal normal
+ sudo pkill x
+
+aqui, ya cada quien el etorno grafico, gnome,kde,lxde,etc
+
+para kde plasma 
+
+sudo pacman -S plasma plasma-desktop plasma-wayland-session
+sudo pacman -S kde-aplications kde-l10n-es
+sudo pacman -S sddm
+
+luego, ejecutar 
+
+systemctl enable sddm
+systemctl start sddm
+
+si el wifi no se muestra, ejecutar
+
+# pacman -S plasma-nm networkmanager-openvpn(esta linea es opcional)
+# systemctl stop dhcpcd (you'll lost connection here)
+# systemctl enable NetworkManager
+# systemctl start NetworkManager
+
+y para reconocer los otros sistemas operativos
+ sudo grub-mkconfig -o /boot/grub/grub.cfg
