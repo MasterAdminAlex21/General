@@ -125,6 +125,8 @@ instalacion entorno grafico basico
 probar el grafico:
  sudo pacman -S xorg xorg-server xorg-xinit xorg-utils
 
+*nota: al parecer, arch linux deprecio xorg-utils, si no funciona lo anterior, intentar con xorg-apps
+
 instalar soporte 3d
  sudo pacman -S mesa mesa-demos
 
@@ -145,7 +147,7 @@ aqui, ya cada quien el etorno grafico, gnome,kde,lxde,etc
 para kde plasma 
 
 sudo pacman -S plasma plasma-desktop plasma-wayland-session
-sudo pacman -S kde-aplications kde-l10n-es
+sudo pacman -S kde-aplications 
 sudo pacman -S sddm
 
 luego, ejecutar 
