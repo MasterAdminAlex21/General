@@ -50,3 +50,7 @@ yay nombrepaquete
 en nombrepaquete poner gns3-gui, gns3-server,...
 
 considerando siempre tambien la version de git
+
+
+o pueden checar la pagina:
+https://computingforgeeks.com/how-to-install-latest-gns3-on-arch-linux-and-manjaro/
