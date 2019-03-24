@@ -1,0 +1,52 @@
+instalar gns3 en arch linux
+
+instalar pip, wget, git y pyqt5
+
+sudo pacman -S python-pip wget git
+sudo pacman -S python-pyqt5 qt5-tools qt5-multimedia
+
+instalar dependencias
+
+sudo pacman -S python-pyqt5 qt5-multimedia qt5-tools python-pyzmq
+
+instaar dependencias usando pip
+
+sudo pip install -U tornado ws4py setuptools netifaces zmq dev
+sudo pip install -U ws4py
+sudo pip install pyqt5
+
+instalar algunas dependencias:
+
+sudo pacman -S gcc cmake libelf libcap
+
+a partir de aqui,pueden usar la interfaz de instalacion (pamac preferentemente)
+
+para instalar pamac:
+sudo pacman -S pamac
+
+o pueden hacerlo desde terminal con yay
+
+para instalar yay
+
+sudo pacman -S yay
+
+usando pamac:
+abrir la ventana, y buscar en los repositorios aur los siguientes paquetes:
+gns3-gui
+gns3-server
+dynamips
+iouyap
+iniparser 
+vpcs
+ubridge
+
+e instalar las versiones de git (nromalmente aparecen 2 paquetes, el 'base' y la version de git, la version de git tiene en el nombre nombre-paquete-git, ej. gns3-gui aparece como gns3-gui-git la version de git)
+
+
+usando yay:
+ejecutar por cada paquete anterior:
+yay nombrepaquete
+
+en nombrepaquete poner gns3-gui, gns3-server,...
+
+considerando siempre tambien la version de git
